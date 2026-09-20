@@ -43,14 +43,14 @@ public async Task<ActionResult<IEnumerable<EmployeeResponseDto>>> Search([FromQu
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, UpdateEmployeeDto dto)
     {
-        var success = await _service.UpdateAsync(id, dto);
-        return success ? NoContent() : NotFound();
+        await _service.UpdateAsync(id, dto);
+        return NoContent();
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var success = await _service.DeleteAsync(id);
-        return success ? NoContent() : NotFound();
+        await _service.DeleteAsync(id);
+        return NoContent();
     }
 }
