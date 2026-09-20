@@ -1,12 +1,13 @@
-using Domain.Entities;
+using Application.DTOs;
 
 namespace Application.Interfaces;
 
 public interface IEmployeeService
 {
-    Task<IEnumerable<Employee>> GetAllAsync();
-    Task<Employee?> GetByIdAsync(int id);
-    Task<Employee> CreateAsync(Employee employee);
-    Task<bool> UpdateAsync(int id, Employee updatedEmployee);
+    Task<IEnumerable<EmployeeResponseDto>> GetAllAsync();
+    Task<EmployeeResponseDto?> GetByIdAsync(int id);
+    Task<IEnumerable<EmployeeResponseDto>> SearchAsync(string? name, decimal? minSalary);
+    Task<EmployeeResponseDto> CreateAsync(CreateEmployeeDto dto);
+    Task<bool> UpdateAsync(int id, UpdateEmployeeDto dto);
     Task<bool> DeleteAsync(int id);
 }
