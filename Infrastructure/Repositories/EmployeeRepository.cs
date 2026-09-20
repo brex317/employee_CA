@@ -20,6 +20,19 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<Employee?> GetByIdAsync(int id) =>
         await _context.Employees.FindAsync(id);
 
+    public async Task<IEnumerable<Employee>> SearchAsync(string? name, decimal? minSalary)
+{
+    var query = _context.Employees.AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(name))
+        query = query.Where(e => e.FullName.Contains(name));
+
+    if (minSalary.HasValue)
+        query = query.Where(e => e.Salary >= minSalary.Value);
+
+    return await query.ToListAsync();
+}
+
     public async Task AddAsync(Employee employee) =>
         await _context.Employees.AddAsync(employee);
 
