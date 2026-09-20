@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Domain.Entities;
 using Application.Interfaces;
+using Application.DTOs;
 
 namespace Api.Controllers;
 
@@ -16,27 +16,34 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Employee>>> GetAll() =>
+    public async Task<ActionResult<IEnumerable<EmployeeResponseDto>>> GetAll() =>
         Ok(await _service.GetAllAsync());
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Employee>> GetById(int id)
+    public async Task<ActionResult<EmployeeResponseDto>> GetById(int id)
     {
         var employee = await _service.GetByIdAsync(id);
         return employee is null ? NotFound() : Ok(employee);
     }
 
+    [HttpGet("search")]
+public async Task<ActionResult<IEnumerable<EmployeeResponseDto>>> Search([FromQuery] string? name, [FromQuery] decimal? minSalary)
+{
+    var results = await _service.SearchAsync(name, minSalary);
+    return Ok(results);
+}
+
     [HttpPost]
-    public async Task<ActionResult<Employee>> Create(Employee employee)
+    public async Task<ActionResult<EmployeeResponseDto>> Create(CreateEmployeeDto dto)
     {
-        var created = await _service.CreateAsync(employee);
+        var created = await _service.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, Employee updatedEmployee)
+    public async Task<IActionResult> Update(int id, UpdateEmployeeDto dto)
     {
-        var success = await _service.UpdateAsync(id, updatedEmployee);
+        var success = await _service.UpdateAsync(id, dto);
         return success ? NoContent() : NotFound();
     }
 
